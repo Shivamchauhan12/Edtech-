@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+    overflow-x: hidden;
+}
+
+.homepage_bg{
+    background: url("../src/assets/Images/bghome.svg");
+}
+
+/* Apply this class to the container */
+.custom-shadow-wrapper {
+  position: relative;
+  display: inline-block; /* Or any display property that suits your layout */
+  box-shadow: 15px 15px rgb(254, 255, 255);
+  width: 100%;
+  height: 100%;
+}
+
+.instructor-shadow:hover {
+    box-shadow: 1px 1px 15px  rgb(124, 211, 211);
+   
+  }
+
+  .blob {
+    position: relative;
+   /* Ensures that the blob is clipped correctly */
+  }
+  
+  .blob::before {
+    content: '';
+    position: absolute;
+    top: 40%;
+    left: 45%;
+    width: 500px; /* Adjust as needed */
+    height: 400px; /* Adjust as needed */
+    background: radial-gradient(circle at center, #3e45bd4d, rgba(43, 26, 227, 0));
+    border-radius: 50%;
+    transform: translate(-59%, -55%);
+    filter: blur(60px); /* Adjust blur radius as needed */
+  }
+
+  .glass-effect {
+    background-color: rgba(255, 255, 255, 0.058); 
+    border-radius: 5px; 
+}
+  
