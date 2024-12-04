@@ -23,15 +23,15 @@ const Dashboard = () => {
   return (
     <div className="relative flex min-h-[calc(100vh-3.5rem)] flex-col lg:flex-row ">
       {/* Mobile Sidebar Toggle */}
-      <button
+      {/* <button
         onClick={toggleSidebar}
         className="lg:hidden absolute top-4 left-4 z-50 p-2 bg-gray-700 text-white rounded-full"
       >
         ☰
-      </button>
+      </button> */}
 
       {/* Sidebar: Show on large screens and toggle on small screens */}
-      <Sidebar className={`${sidebarOpen ? "block" : "hidden"} lg:block`} />
+        <Sidebar className="lg:block" />
 
       {/* Content */}
       <div className="h-[calc(100vh-3.5rem)] flex-1 overflow-auto px-4 lg:px-10">

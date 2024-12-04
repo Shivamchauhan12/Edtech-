@@ -4,6 +4,8 @@ import "./App.css"
 import { useDispatch, useSelector } from "react-redux"
 // React Router
 import { Route, Routes, useNavigate } from "react-router-dom"
+import { ToastContainer } from "react-toastify"
+import 'react-toastify/dist/ReactToastify.css';
 
 // Components
 import Navbar from "./components/Common/Navbar"
@@ -50,6 +52,7 @@ function App() {
 
   return (
     <div className="flex min-h-screen w-screen flex-col bg-richblack-900 font-inter">
+      <ToastContainer />
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

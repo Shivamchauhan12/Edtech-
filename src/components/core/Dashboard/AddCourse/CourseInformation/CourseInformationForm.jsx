@@ -5,7 +5,7 @@ import { HiOutlineCurrencyRupee } from "react-icons/hi"
 import { MdNavigateNext } from "react-icons/md"
 import { useDispatch, useSelector } from "react-redux"
 import { toast } from "react-toastify"
-
+import 'react-toastify/dist/ReactToastify.css';
 import {
   addCourseDetails,
   editCourseDetails,
