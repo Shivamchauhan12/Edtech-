@@ -106,7 +106,7 @@ export default function MyProfile() {
           <div>
             <p className="mb-2 text-sm text-richblack-600">Date Of Birth</p>
             <p className="text-sm font-medium text-richblack-5">
-              {formattedDate(user?.additionalDetails?.dateOfBirth) ??
+              {user?.additionalDetails?.dateOfBirth != null ? formattedDate(user?.additionalDetails?.dateOfBirth) :
                 "Add Date Of Birth"}
             </p>
           </div>

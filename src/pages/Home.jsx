@@ -72,7 +72,17 @@ const Home = () => {
                             linkto: "/login",
                             active: false,
                         }}
-                        codeblock={`<<!DOCTYPE html>\n<html>\n<head><title>Example</title><link rel="stylesheet" href="styles.css">\n</head>\n`}
+                        codeblock={`<!DOCTYPE html>
+<html>
+<head>
+  <title>Example</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Discover the future of learning, today.</h1>
+</body>
+</html>
+`}
                         codeColor={"text-yellow-25"}
                     />
                 </div>
@@ -99,11 +109,21 @@ const Home = () => {
                             linkto: "/login",
                             active: false,
                         }}
-                        codeblock={`<<!DOCTYPE html>\n<html>\n<head><title>Example</title><link rel="stylesheet" href="styles.css">\n</head>\n`}
+                        codeblock={`<!DOCTYPE html>
+<html>
+<head>
+  <title>Example</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Discover the future of learning, today.</h1>
+</body>
+</html>
+`}
                         codeColor={"text-yellow-25"}
                     />
                 </div>
-                
+
             </div>
 
             {/* Section 2 */}

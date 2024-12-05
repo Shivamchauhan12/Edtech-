@@ -19,10 +19,12 @@ function Navbar() {
 
   const [subLinks, setSubLinks] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // Mobile menu state
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileCatalogOpen, setMobileCatalogOpen] = useState(false); // Toggle for mobile catalog
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false); // Profile dropdown toggle
 
-  const mobileMenuRef = useRef(null); // Reference to the mobile menu for detecting outside clicks
-  const menuButtonRef = useRef(null); // Reference to the menu button for detecting outside clicks
+  const mobileMenuRef = useRef(null);
+  const menuButtonRef = useRef(null);
 
   useEffect(() => {
     (async () => {
@@ -37,7 +39,6 @@ function Navbar() {
     })();
   }, []);
 
-  // Close the mobile menu if clicked outside of the menu
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (
@@ -62,14 +63,14 @@ function Navbar() {
 
   return (
     <div
-      className={`flex h-14 items-center justify-center border-b-[1px] border-b-richblack-700 ${
-        location.pathname !== "/" ? "bg-richblack-800" : ""
-      } transition-all duration-200`}
+    className={`flex h-16 items-center justify-center border-b-[1px] border-b-richblack-700 ${
+      location.pathname !== "/" ? "bg-richblack-800" : ""
+    } transition-all duration-200`}
     >
       <div className="flex w-11/12 max-w-maxContent items-center justify-between">
         {/* Logo */}
         <Link to="/">
-          <img src={logo} alt="Logo" width={160} height={32} loading="lazy" />
+          <img src={logo}  className="h-10 w-auto md:h-12"  alt="Logo" width={200} height={40} loading="lazy" />
         </Link>
 
         {/* Desktop Navbar */}
@@ -90,8 +91,9 @@ function Navbar() {
                       <BsChevronDown />
                     </div>
                     <div
-                      className={`absolute left-0 top-10 z-[1000] hidden w-[200px] flex-col rounded-lg bg-richblack-5 p-4 text-richblack-900 group-hover:flex`}
+                      className={`invisible absolute left-[50%] top-[50%] z-[1000] flex w-[200px] translate-x-[-50%] translate-y-[3em] flex-col rounded-lg bg-richblack-5 p-4 text-richblack-900 opacity-0 transition-all duration-150 group-hover:visible group-hover:translate-y-[1.65em] group-hover:opacity-100 lg:w-[300px]`}
                     >
+                      <div className="absolute left-[50%] top-0 -z-10 h-6 w-6 translate-x-[80%] translate-y-[-40%] rotate-45 select-none rounded bg-richblack-5"></div>
                       {loading ? (
                         <p className="text-center">Loading...</p>
                       ) : subLinks.length ? (
@@ -144,7 +146,6 @@ function Navbar() {
               )}
             </Link>
           )}
-          {/* Conditionally render Login/Signup buttons or Profile dropdown */}
           {token === null ? (
             <>
               <Link to="/login">
@@ -159,7 +160,14 @@ function Navbar() {
               </Link>
             </>
           ) : (
-            <ProfileDropdown />
+            <div
+              onClick={() =>
+                setProfileDropdownOpen((prev) => !prev)
+              }
+              className="relative cursor-pointer"
+            >
+              <ProfileDropdown isOpen={profileDropdownOpen} />
+            </div>
           )}
         </div>
 
@@ -167,41 +175,125 @@ function Navbar() {
         <button
           ref={menuButtonRef}
           className="mr-4 md:hidden"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)} // Toggle mobile menu
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
           <AiOutlineMenu fontSize={24} fill="#AFB2BF" />
         </button>
       </div>
 
       {/* Mobile Menu */}
-      <div
-        ref={mobileMenuRef}
-        className={`${
-          mobileMenuOpen ? "block" : "hidden"
-        } fixed top-0 right-0 w-3/4 h-full bg-richblack-800 z-50 md:hidden transition-all duration-300`}
-      >
-        <div className="p-6">
-          <ul className="flex flex-col gap-6 text-white">
-            {NavbarLinks.map((link, index) => (
-              <li key={index} className="relative">
-                {link.title === "Catalog" ? (
-                  <div className="group relative flex cursor-pointer items-center gap-1">
-                    <p>{link.title}</p>
-                    <BsChevronDown />
-                  </div>
-                ) : (
-                  <Link
-                    to={link?.path}
-                    onClick={() => setMobileMenuOpen(false)} // Close menu on link click
-                  >
-                    <p>{link.title}</p>
-                  </Link>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+     {/* Mobile Menu */}
+<div
+  ref={mobileMenuRef}
+  className={`${
+    mobileMenuOpen ? "block" : "hidden"
+  } fixed top-0 right-0 w-3/4 h-full bg-richblack-800 z-50 md:hidden transition-all duration-300`}
+>
+  <div className="p-6">
+    <ul className="flex flex-col gap-6 text-white">
+      {NavbarLinks.map((link, index) => (
+        <li key={index}>
+          {link.title === "Catalog" ? (
+            <div>
+              <div
+                className="flex justify-between cursor-pointer"
+                onClick={() => setMobileCatalogOpen((prev) => !prev)}
+              >
+                <p>{link.title}</p>
+                <BsChevronDown />
+              </div>
+              {mobileCatalogOpen && (
+                <div>
+                  {loading ? (
+                    <p className="text-center">Loading...</p>
+                  ) : (
+                    subLinks.length  ? subLinks
+                          ?.filter((subLink) => subLink?.courses?.length > 0)
+                          ?.map((subLink, i) => (
+                            <Link
+                              to={`/catalog/${subLink.name
+                                .split(" ")
+                                .join("-")
+                                .toLowerCase()}`}
+                              className="rounded-lg bg-transparent py-2 pl-4 hover:bg-richblack-50"
+                              key={i}
+                            >
+                              <p>{subLink.name}</p>
+                            </Link>
+                          )):"null"
+                  )}
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link
+              to={link?.path}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              {link.title}
+            </Link>
+          )}
+        </li>
+      ))}
+
+      {/* Mobile Dashboard Option */}
+      {token && (
+        <li>
+          <Link
+            to="/dashboard/my-profile"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block px-2 py-1"
+          >
+            Dashboard
+          </Link>
+        </li>
+      )}
+
+      {/* Mobile Cart Option for Non-Instructors */}
+      {user && user?.accountType !== ACCOUNT_TYPE.INSTRUCTOR && (
+        <li>
+          <Link
+            to="/dashboard/cart"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block px-2 py-1"
+          >
+            Cart
+            {totalItems > 0 && (
+              <span className="ml-2 bg-richblack-600 px-2 py-1 rounded text-xs text-yellow-100">
+                {totalItems}
+              </span>
+            )}
+          </Link>
+        </li>
+      )}
+
+      {/* Mobile Login/Signup Options */}
+      {token === null && (
+        <>
+          <li>
+            <Link
+              to="/login"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-2 py-1"
+            >
+              Log in
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/signup"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-2 py-1"
+            >
+              Sign up
+            </Link>
+          </li>
+        </>
+      )}
+    </ul>
+  </div>
+</div>
+
     </div>
   );
 }

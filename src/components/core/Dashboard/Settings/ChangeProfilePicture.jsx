@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 
 import { updateDisplayPicture } from "../../../../services/operations/SettingsAPI"
 import IconBtn from "../../../Common/IconBtn"
+import { toast } from "react-toastify"
 
 export default function ChangeProfilePicture() {
   const { token } = useSelector((state) => state.auth)
@@ -40,6 +41,10 @@ export default function ChangeProfilePicture() {
   const handleFileUpload = () => {
     try {
       console.log("uploading...")
+      if(!imageFile){
+        toast.error("Please select valid image")
+return;
+      }
       setLoading(true)
       const formData = new FormData()
       formData.append("displayPicture", imageFile)
@@ -48,6 +53,7 @@ export default function ChangeProfilePicture() {
         setLoading(false)
       })
     } catch (error) {
+
       console.log("ERROR MESSAGE - ", error.message)
     }
   }
