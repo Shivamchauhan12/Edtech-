@@ -52,18 +52,18 @@ export async function buyCourse(token, courses, userDetails, navigate, dispatch)
             currency: orderResponse.data.message.currency,
             amount: `${orderResponse.data.message.amount}`,
             order_id:orderResponse.data.message.id,
-            name:"StudyNotion",
+            name:"Edtech Education",
             description: "Thank You for Purchasing the Course",
             image:rzpLogo,
             prefill: {
                 name:`${userDetails.firstName}`,
                 email:userDetails.email
             },
-            handler: function(response) {
+            handler:async  function(response) {
                 //send successful wala mail
-                sendPaymentSuccessEmail(response, orderResponse.data.message.amount,token );
+                await sendPaymentSuccessEmail(response, orderResponse.data.message.amount,token );
                 //verifyPayment
-                verifyPayment({...response, courses}, token, navigate, dispatch);
+                await verifyPayment({...response, courses}, token, navigate, dispatch);
             }
         }
         //miss hogya tha 
@@ -99,7 +99,6 @@ async function sendPaymentSuccessEmail(response, amount, token) {
 
 //verify payment
 async function verifyPayment(bodyData, token, navigate, dispatch) {
-    const toastId = toast.loading("Verifying Payment....");
     dispatch(setPaymentLoading(true));
     try{
         const response  = await apiConnector("POST", COURSE_VERIFY_API, bodyData, {
