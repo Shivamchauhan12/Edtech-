@@ -1,42 +1,41 @@
-import { useEffect, useState, useRef } from "react"
-import { AiOutlineMenu, AiOutlineShoppingCart } from "react-icons/ai"
-import { BsChevronDown } from "react-icons/bs"
-import { useSelector } from "react-redux"
-import { Link, matchPath, useLocation } from "react-router-dom"
+import { useEffect, useState, useRef } from "react";
+import { AiOutlineMenu, AiOutlineShoppingCart } from "react-icons/ai";
+import { BsChevronDown } from "react-icons/bs";
+import { useSelector } from "react-redux";
+import { Link, matchPath, useLocation } from "react-router-dom";
 
-import logo from "../../assets/Logo/Logo-Full-Light.png"
-import { NavbarLinks } from "../../data/navbar-links"
-import { apiConnector } from "../../services/apiconnector"
-import { categories } from "../../services/apis"
-import { ACCOUNT_TYPE } from "../../utils/constants"
-import ProfileDropdown from "../core/Auth/ProfileDropDown"
+import logo from "../../assets/Logo/Logo-Full-Light.png";
+import { NavbarLinks } from "../../data/navbar-links";
+import { apiConnector } from "../../services/apiconnector";
+import { categories } from "../../services/apis";
+import { ACCOUNT_TYPE } from "../../utils/constants";
+import ProfileDropdown from "../core/Auth/ProfileDropDown";
 
 function Navbar() {
-  const { token } = useSelector((state) => state.auth)
-  const { user } = useSelector((state) => state.profile)
-  const { totalItems } = useSelector((state) => state.cart)
-  const location = useLocation()
+  const { token } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.profile);
+  const { totalItems } = useSelector((state) => state.cart);
+  const location = useLocation();
 
-  const [subLinks, setSubLinks] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false) // Mobile menu state
-  const [catalogOpen, setCatalogOpen] = useState(false) // Catalog submenu state
+  const [subLinks, setSubLinks] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // Mobile menu state
 
-  const mobileMenuRef = useRef(null) // Reference to the mobile menu for detecting outside clicks
-  const menuButtonRef = useRef(null) // Reference to the menu button for detecting outside clicks
+  const mobileMenuRef = useRef(null); // Reference to the mobile menu for detecting outside clicks
+  const menuButtonRef = useRef(null); // Reference to the menu button for detecting outside clicks
 
   useEffect(() => {
-    ;(async () => {
-      setLoading(true)
+    (async () => {
+      setLoading(true);
       try {
-        const res = await apiConnector("GET", categories.CATEGORIES_API)
-        setSubLinks(res.data.data)
+        const res = await apiConnector("GET", categories.CATEGORIES_API);
+        setSubLinks(res.data.data);
       } catch (error) {
-        console.log("Could not fetch Categories.", error)
+        console.log("Could not fetch Categories.", error);
       }
-      setLoading(false)
-    })()
-  }, [])
+      setLoading(false);
+    })();
+  }, []);
 
   // Close the mobile menu if clicked outside of the menu
   useEffect(() => {
@@ -47,19 +46,19 @@ function Navbar() {
         menuButtonRef.current &&
         !menuButtonRef.current.contains(e.target)
       ) {
-        setMobileMenuOpen(false)
+        setMobileMenuOpen(false);
       }
-    }
+    };
 
-    document.addEventListener("mousedown", handleClickOutside)
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const matchRoute = (route) => {
-    return matchPath({ path: route }, location.pathname)
-  }
+    return matchPath({ path: route }, location.pathname);
+  };
 
   return (
     <div
@@ -77,24 +76,21 @@ function Navbar() {
         <nav className="hidden md:block">
           <ul className="flex gap-x-6 text-richblack-25">
             {NavbarLinks.map((link, index) => (
-              <li key={index}>
+              <li key={index} className="relative group">
                 {link.title === "Catalog" ? (
                   <>
                     <div
-                      className={`group relative flex cursor-pointer items-center gap-1 ${
+                      className={`flex cursor-pointer items-center gap-1 ${
                         matchRoute("/catalog/:catalogName")
                           ? "text-yellow-25"
                           : "text-richblack-25"
                       }`}
-                      onClick={() => setCatalogOpen(!catalogOpen)} // Toggle catalog
                     >
                       <p>{link.title}</p>
                       <BsChevronDown />
                     </div>
                     <div
-                      className={`${
-                        catalogOpen ? "block" : "hidden"
-                      } absolute left-0 top-12 z-[1000] flex flex-col rounded-lg bg-richblack-5 p-4 text-richblack-900 w-[200px]`}
+                      className={`absolute left-0 top-10 z-[1000] hidden w-[200px] flex-col rounded-lg bg-richblack-5 p-4 text-richblack-900 group-hover:flex`}
                     >
                       {loading ? (
                         <p className="text-center">Loading...</p>
@@ -189,42 +185,10 @@ function Navbar() {
             {NavbarLinks.map((link, index) => (
               <li key={index} className="relative">
                 {link.title === "Catalog" ? (
-                  <>
-                    <div
-                      className="group relative flex cursor-pointer items-center gap-1"
-                      onClick={() => setCatalogOpen(!catalogOpen)} // Toggle catalog on click
-                    >
-                      <p>{link.title}</p>
-                      <BsChevronDown />
-                    </div>
-                    <div
-                      className={`${
-                        catalogOpen ? "block" : "hidden"
-                      } absolute left-0 top-12 z-[1000] flex flex-col rounded-lg bg-richblack-5 p-4 text-richblack-900 w-[200px]`}
-                    >
-                      {loading ? (
-                        <p className="text-center">Loading...</p>
-                      ) : subLinks.length ? (
-                        subLinks
-                          ?.filter((subLink) => subLink?.courses?.length > 0)
-                          ?.map((subLink, i) => (
-                            <Link
-                              to={`/catalog/${subLink.name
-                                .split(" ")
-                                .join("-")
-                                .toLowerCase()}`}
-                              className="rounded-lg bg-transparent py-2 pl-4 hover:bg-richblack-50"
-                              key={i}
-                              onClick={() => setMobileMenuOpen(false)} // Close menu after selecting
-                            >
-                              <p>{subLink.name}</p>
-                            </Link>
-                          ))
-                      ) : (
-                        <p className="text-center">No Courses Found</p>
-                      )}
-                    </div>
-                  </>
+                  <div className="group relative flex cursor-pointer items-center gap-1">
+                    <p>{link.title}</p>
+                    <BsChevronDown />
+                  </div>
                 ) : (
                   <Link
                     to={link?.path}
@@ -235,33 +199,11 @@ function Navbar() {
                 )}
               </li>
             ))}
-            {token === null ? (
-              <>
-                <Link to="/login">
-                  <button
-                    className="rounded-[8px] border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Log in
-                  </button>
-                </Link>
-                <Link to="/signup">
-                  <button
-                    className="rounded-[8px] border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Sign up
-                  </button>
-                </Link>
-              </>
-            ) : (
-              <ProfileDropdown />
-            )}
           </ul>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;
