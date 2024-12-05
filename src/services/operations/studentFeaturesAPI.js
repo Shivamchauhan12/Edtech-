@@ -59,11 +59,11 @@ export async function buyCourse(token, courses, userDetails, navigate, dispatch)
                 name:`${userDetails.firstName}`,
                 email:userDetails.email
             },
-            handler:async  function(response) {
+            handler: function(response) {
                 //send successful wala mail
-                await sendPaymentSuccessEmail(response, orderResponse.data.message.amount,token );
+                  sendPaymentSuccessEmail(response, orderResponse.data.message.amount,token );
                 //verifyPayment
-                await verifyPayment({...response, courses}, token, navigate, dispatch);
+                 verifyPayment({...response, courses}, token, navigate, dispatch);
             }
         }
         //miss hogya tha 
