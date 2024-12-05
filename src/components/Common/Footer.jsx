@@ -26,7 +26,7 @@ export const Footer = () => {
                 Company
               </h1>
               <div className="flex flex-col gap-2">
-                {["About"].map((ele, i) => {
+                {["About","contact"].map((ele, i) => {
                   return (
                     <div
                       key={i}
